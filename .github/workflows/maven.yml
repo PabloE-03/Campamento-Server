@@ -15,15 +15,45 @@ on:
 jobs:
   build:
 
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        os: [linux, windows]
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.SQL_PASSWD }}
+          MYSQL_DATABASE: campamento
+          MYSQL_USER: ${{ secrets.SQL_PASSWD }}
+          #MYSQL_PASSWORD: testpassword
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
+    - name: Checkout repository
     - uses: actions/checkout@v3
+    
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+
+    - name: Cache Maven packages
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: ${{ runner.os }}-maven
+        
     - name: Build with Maven
       run: mvn clean install
+      
+    - name: Deploy to server
+      env:
+        MYSQL_DATABASE: testdb
+        MYSQL_USER: testuser
+        MYSQL_PASSWORD: testpassword
+      run: java -jar target/campamento-0.0.1-SNAPSHOT.jar
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
