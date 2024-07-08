@@ -33,12 +33,10 @@ public class CargaMonitores
 	{
 		List<Monitor> monitores = new LinkedList<Monitor>();
 		monitores.add(new Monitor("peibol.max@gmail.com","Pablo_64020","Pablo","Administrador"));
-		monitores.add(new Monitor("elena04lara@gmail.com","Elena_29410","Elena","Monitor"));
+		monitores.add(new Monitor("noelia.momu@gmail.com","Noe_14030","Noelia","Moderador"));
 		monitores.add(new Monitor("alvarez.botella@gmail.com","Lola_12978","Lola","Monitor"));
-		monitores.add(new Monitor("shepoly@gmail.com","Kike_36820","Kike","Monitor"));
-		monitores.add(new Monitor("Lm-latinartist@outlook.com","Yenny_42120","Yenny","Monitor"));
-		monitores.add(new Monitor("cristina1242004@gmail.com","Cristina_14030","Cristina","Monitor"));
-
+		monitores.add(new Monitor("larubita15vs@gmail.com","Silvia_36820","Silvia","Moderador"));
+		monitores.add(new Monitor("lorluqcab@gmail.com","Lorena_42120","Lorena","Moderador"));
 		monitorRepo.saveAll(monitores);
 		
 	}
@@ -80,7 +78,7 @@ public class CargaMonitores
 					enfermedades.add(enfermedad);
 				}
 				
-				Children children = new Children(spliter[0],spliter[1],spliter[2],enfermedades);
+				Children children = new Children(spliter[0],spliter[1],spliter[2],enfermedades,new LinkedList<>());
 				
 				childrenRepo.save(children);
 				linea = br.readLine();

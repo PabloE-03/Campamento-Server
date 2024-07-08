@@ -18,4 +18,5 @@ logging:
   level: warn
 server:
     port: 8080
-urlCors: http://localhost:5173
+    #address: 192.168.153.183
+urlCors: http://192.168.153.183:5173/

@@ -1,5 +1,6 @@
 package es.andujar.campamento.rest;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -369,6 +370,58 @@ public class CampamentoRest
 			
 			monitor.setRol(newRol);
 			this.monitorRepo.save(monitor);
+			return ResponseEntity.ok().build();
+		}
+		catch(UserException exception)
+		{
+			log.error(exception.getMessage(),exception);
+			return ResponseEntity.status(exception.getCode()).body(exception.toMap());
+		}
+		catch(Exception exception)
+		{
+			String message = "Error de servidor";
+			log.error(message,exception);
+			UserException response = new UserException(500,message,exception);
+			return ResponseEntity.status(500).body(response.toMap());
+		}
+	}
+	
+	@RequestMapping(method = RequestMethod.PATCH,value = "/marcar/children",consumes="application/json")
+	public ResponseEntity<?> markChildren(@RequestHeader(name="children",required=true)String children)
+	{
+		try
+		{
+			List<Children> childrens = this.childrenRepo.findAll();
+			Children toPatch = null;
+			boolean found = false;
+			int index = 0;
+			while(index<childrens.size() && !found)
+			{
+				Children item = childrens.get(index);
+				String valueItem = item.getNombre()+" "+item.getApellido();
+				if(valueItem.equals(children))
+				{
+					toPatch = item;
+					found = true;
+				}
+				index++;
+			}
+			
+			if(toPatch==null)
+			{
+				throw new UserException("El niño "+children+" no existe",404);
+			}
+			
+			List<String> dias = toPatch.getDias();
+			if(dias==null)
+			{
+				dias = new LinkedList<String>();
+			}
+			LocalDateTime now = LocalDateTime.now();
+			String dayValue = now.getDayOfMonth()+"/"+now.getMonthValue()+"/"+now.getYear();
+			dias.add(dayValue);
+			toPatch.setDias(dias);
+			this.childrenRepo.save(toPatch);
 			return ResponseEntity.ok().build();
 		}
 		catch(UserException exception)

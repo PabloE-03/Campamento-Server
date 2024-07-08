@@ -34,4 +34,8 @@ public class Children implements Serializable
 	/**Lista de enfermedades del niño*/
 	@Column
 	private List<String> enfermedades;
+	
+	/**Dias que asiste el niño */
+	@Column
+	private List<String> dias;
 }

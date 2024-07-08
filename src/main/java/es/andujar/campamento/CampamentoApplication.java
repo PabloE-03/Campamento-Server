@@ -24,7 +24,7 @@ public class CampamentoApplication implements CommandLineRunner
 	public void run(String... args) throws Exception 
 	{
 		cargaMonitores.cargarMonitores();
-		cargaMonitores.cargarChildrens();
+		//cargaMonitores.cargarChildrens();
 	}
 	
 
